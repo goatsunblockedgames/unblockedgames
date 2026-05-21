@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Unblocked Games Hub</title>
+<title>Goats Unblocked Games</title>
 
 <!-- Google AdSense -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4335653991954613"
@@ -11,22 +11,27 @@ crossorigin="anonymous"></script>
 
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
-body { font-family: Arial, sans-serif; background: linear-gradient(135deg,#667eea 0%,#764ba2 100%); min-height:100vh; padding:20px; }
+body { font-family: Arial, sans-serif; background: linear-gradient(135deg,#667eea 0%,#764ba2 100%); min-height:100vh; padding:20px; color:white; }
 .container { max-width:1200px; margin:0 auto; }
-header { text-align:center; color:white; margin-bottom:30px; padding:20px; }
-h1 { font-size:3em; margin-bottom:10px; text-shadow:2px 2px 4px rgba(0,0,0,0.3); }
+header { text-align:center; margin-bottom:30px; padding:20px; }
+h1 { font-size:3em; text-shadow:2px 2px 4px rgba(0,0,0,0.3); }
 .subtitle { font-size:1.2em; opacity:0.9; }
-.games-nav { display:flex; justify-content:center; gap:15px; margin-bottom:30px; flex-wrap:wrap; }
+.games-nav { display:flex; justify-content:center; gap:15px; margin-bottom:20px; flex-wrap:wrap; }
 .nav-btn { background:white; color:#667eea; border:none; padding:12px 25px; border-radius:25px; cursor:pointer; font-size:1em; font-weight:bold; transition: all 0.3s; box-shadow:0 4px 15px rgba(0,0,0,0.2); }
 .nav-btn:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(0,0,0,0.3); }
 .nav-btn.active { background: linear-gradient(135deg,#f093fb 0%,#f5576c 100%); color:white; }
-.game-container { background:white; border-radius:15px; padding:30px; box-shadow:0 20px 60px rgba(0,0,0,0.3); display:none; }
+.game-container { background:white; border-radius:15px; padding:20px; box-shadow:0 20px 60px rgba(0,0,0,0.3); display:none; color:black; position:relative; }
 .game-container.active { display:block; animation: slideIn 0.3s ease-in-out; }
 @keyframes slideIn { from { opacity:0; transform:translateY(10px);} to { opacity:1; transform:translateY(0); } }
-canvas { display:block; margin:20px auto; border-radius:10px; background:#f0f0f0; }
+canvas { display:block; margin:20px auto; background:#222; image-rendering: pixelated; border-radius:10px; }
 button { background: linear-gradient(135deg,#667eea 0%,#764ba2 100%); color:white; border:none; padding:10px 20px; border-radius:20px; cursor:pointer; margin:5px; transition:all 0.2s; }
 button:hover { transform:scale(1.05); box-shadow:0 4px 15px rgba(102,126,234,0.4); }
 button:active { transform:scale(0.95); }
+.fullscreen-btn { position:absolute; top:10px; right:10px; }
+.game-board { display:grid; grid-template-columns: repeat(4,80px); gap:10px; justify-content:center; }
+.card { width:80px; height:80px; background:#667eea; border-radius:10px; cursor:pointer; font-size:2em; color:white; display:flex; justify-content:center; align-items:center; transition:0.3s; }
+.card.flipped { background:#f093fb; color:black; }
+.card.matched { background:#4CAF50; color:white; cursor:default; }
 @media(max-width:768px){ h1{ font-size:2em;} .games-nav{ gap:10px;} .nav-btn{ padding:10px 15px; font-size:0.9em;} canvas{ width:90%; height:auto; } }
 </style>
 </head>
@@ -34,7 +39,7 @@ button:active { transform:scale(0.95); }
 <div class="container">
 <header>
 <h1>🎮 Unblocked Games Hub</h1>
-<p class="subtitle">Play all games in one place!</p>
+<p class="subtitle">Enhanced Games with Fullscreen Support</p>
 </header>
 
 <div class="games-nav">
@@ -43,33 +48,26 @@ button:active { transform:scale(0.95); }
 <button class="nav-btn" onclick="switchGame('puzzle',event)">🧩 Puzzle Challenge</button>
 </div>
 
-<!-- AdSense Ad Placeholder -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-4335653991954613"
-     data-ad-slot="1234567890"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
+<!-- AdSense Placeholder -->
+<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4335653991954613" data-ad-slot="1234567890" data-ad-format="auto" data-full-width-responsive="true"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
 
 <!-- RPG Adventure -->
 <div id="rpg-game" class="game-container active">
+<button class="fullscreen-btn" onclick="toggleFullscreen('rpgCanvas')">Fullscreen</button>
 <h2>🛡️ RPG Adventure</h2>
 <canvas id="rpgCanvas" width="400" height="400"></canvas>
 <div class="controls">
-<div>Use Arrow Keys to move and collect treasures!</div>
 <button onclick="resetRPG()">New Game</button>
 </div>
 </div>
 
 <!-- Soccer Simulator -->
 <div id="soccer-game" class="game-container">
+<button class="fullscreen-btn" onclick="toggleFullscreen('soccerCanvas')">Fullscreen</button>
 <h2>⚽ Soccer Simulator</h2>
 <canvas id="soccerCanvas" width="400" height="400"></canvas>
 <div class="controls">
-<div>Use Arrow Keys to move the player and score goals!</div>
 <button onclick="resetSoccer()">New Game</button>
 </div>
 </div>
@@ -82,113 +80,93 @@ button:active { transform:scale(0.95); }
 <button onclick="resetPuzzle()">New Game</button>
 </div>
 </div>
-
 </div>
 
 <script>
 // ===== Game Switching =====
 function switchGame(game,event){
-    document.querySelectorAll('.game-container').forEach(el=>el.classList.remove('active'));
-    document.querySelectorAll('.nav-btn').forEach(el=>el.classList.remove('active'));
-    document.getElementById(game+'-game').classList.add('active');
-    event.currentTarget.classList.add('active');
+document.querySelectorAll('.game-container').forEach(el=>el.classList.remove('active'));
+document.querySelectorAll('.nav-btn').forEach(el=>el.classList.remove('active'));
+document.getElementById(game+'-game').classList.add('active');
+event.currentTarget.classList.add('active');
+}
+
+// ===== Fullscreen function =====
+function toggleFullscreen(canvasId){
+let canvas=document.getElementById(canvasId);
+if(canvas.requestFullscreen) canvas.requestFullscreen();
+else if(canvas.webkitRequestFullscreen) canvas.webkitRequestFullscreen();
+else if(canvas.msRequestFullscreen) canvas.msRequestFullscreen();
 }
 
 // ===== RPG Adventure =====
 const rpgCanvas=document.getElementById('rpgCanvas');
 const rpgCtx=rpgCanvas.getContext('2d');
-let player={x:200,y:200,size:20};
-let treasures=[];
-function spawnTreasure(){treasures=[];for(let i=0;i<5;i++){treasures.push({x:Math.random()*380,y:Math.random()*380,size:10});}}
-function resetRPG(){player={x:200,y:200,size:20};spawnTreasure();drawRPG();}
+const TILE_SIZE=16;
+let rpgMap=[],player={x:5,y:5},treasures=[];
+function generateMap(){rpgMap=[];for(let y=0;y<25;y++){let row=[];for(let x=0;x<25;x++){row.push(Math.random()<0.2?1:0);} rpgMap.push(row);} spawnTreasures();}
+function spawnTreasures(){treasures=[];for(let i=0;i<10;i++){treasures.push({x:Math.floor(Math.random()*25),y:Math.floor(Math.random()*25)});}}
+function resetRPG(){player={x:5,y:5};generateMap();drawRPG();}
 document.addEventListener('keydown',(e)=>{
-    if(!document.getElementById('rpg-game').classList.contains('active')) return;
-    const step=10;
-    if(e.key==='ArrowUp') player.y=Math.max(0,player.y-step);
-    if(e.key==='ArrowDown') player.y=Math.min(380,player.y+step);
-    if(e.key==='ArrowLeft') player.x=Math.max(0,player.x-step);
-    if(e.key==='ArrowRight') player.x=Math.min(380,player.x+step);
-    drawRPG();
+if(!document.getElementById('rpg-game').classList.contains('active')) return;
+if(e.key==='ArrowUp'&&player.y>0) player.y--;
+if(e.key==='ArrowDown'&&player.y<24) player.y++;
+if(e.key==='ArrowLeft'&&player.x>0) player.x--;
+if(e.key==='ArrowRight'&&player.x<24) player.x++;
+collectTreasure();drawRPG();
 });
+function collectTreasure(){for(let i=0;i<treasures.length;i++){if(treasures[i].x===player.x&&treasures[i].y===player.y) treasures.splice(i,1);}}
 function drawRPG(){
-    rpgCtx.clearRect(0,0,400,400);
-    rpgCtx.fillStyle='green';
-    rpgCtx.fillRect(player.x,player.y,player.size,player.size);
-    treasures.forEach((t,i)=>{
-        rpgCtx.fillStyle='gold';
-        rpgCtx.fillRect(t.x,t.y,t.size,t.size);
-        if(Math.abs(player.x-t.x)<15 && Math.abs(player.y-t.y)<15){ treasures.splice(i,1); }
-    });
-}
-spawnTreasure();
-drawRPG();
+rpgCtx.fillStyle='#555'; rpgCtx.fillRect(0,0,rpgCanvas.width,rpgCanvas.height);
+for(let y=0;y<25;y++){for(let x=0;x<25;x++){rpgCtx.fillStyle=rpgMap[y][x]? '#444':'#888'; rpgCtx.fillRect(x*TILE_SIZE,y*TILE_SIZE,TILE_SIZE,TILE_SIZE);}}
+treasures.forEach(t=>{rpgCtx.fillStyle='gold'; rpgCtx.fillRect(t.x*TILE_SIZE,t.y*TILE_SIZE,TILE_SIZE,TILE_SIZE);});
+rpgCtx.fillStyle='blue'; rpgCtx.fillRect(player.x*TILE_SIZE,player.y*TILE_SIZE,TILE_SIZE,TILE_SIZE);}
+resetRPG();
 
 // ===== Soccer Simulator =====
 const soccerCanvas=document.getElementById('soccerCanvas');
 const soccerCtx=soccerCanvas.getContext('2d');
-let soccerPlayer={x:200,y:350,r:15};
-let ball={x:200,y:200,r:10};
-let goal={x:150,y:0,w:100,h:10};
+let soccerPlayer={x:200,y:350,r:15},ball={x:200,y:200,r:10},goal={x:150,y:0,w:100,h:10};
 function resetSoccer(){soccerPlayer={x:200,y:350,r:15};ball={x:200,y:200,r:10};drawSoccer();}
 document.addEventListener('keydown',(e)=>{
-    if(!document.getElementById('soccer-game').classList.contains('active')) return;
-    const step=10;
-    if(e.key==='ArrowUp') soccerPlayer.y=Math.max(0,soccerPlayer.y-step);
-    if(e.key==='ArrowDown') soccerPlayer.y=Math.min(385,soccerPlayer.y+step);
-    if(e.key==='ArrowLeft') soccerPlayer.x=Math.max(0,soccerPlayer.x-step);
-    if(e.key==='ArrowRight') soccerPlayer.x=Math.min(385,soccerPlayer.x+step);
-    // kick ball if close
-    if(Math.abs(soccerPlayer.x-ball.x)<20 && Math.abs(soccerPlayer.y-ball.y)<20) ball.y-=20;
-    drawSoccer();
+if(!document.getElementById('soccer-game').classList.contains('active')) return;
+const step=10;
+if(e.key==='ArrowUp') soccerPlayer.y=Math.max(0,soccerPlayer.y-step);
+if(e.key==='ArrowDown') soccerPlayer.y=Math.min(385,soccerPlayer.y+step);
+if(e.key==='ArrowLeft') soccerPlayer.x=Math.max(0,soccerPlayer.x-step);
+if(e.key==='ArrowRight') soccerPlayer.x=Math.min(385,soccerPlayer.x+step);
+if(Math.abs(soccerPlayer.x-ball.x)<20 && Math.abs(soccerPlayer.y-ball.y)<20) ball.y-=20;
+drawSoccer();
 });
 function drawSoccer(){
-    soccerCtx.clearRect(0,0,400,400);
-    soccerCtx.fillStyle='white';
-    soccerCtx.fillRect(0,0,400,400);
-    // goal
-    soccerCtx.fillStyle='yellow';
-    soccerCtx.fillRect(goal.x,goal.y,goal.w,goal.h);
-    // player
-    soccerCtx.fillStyle='blue';
-    soccerCtx.beginPath();
-    soccerCtx.arc(soccerPlayer.x,soccerPlayer.y,soccerPlayer.r,0,Math.PI*2);
-    soccerCtx.fill();
-    // ball
-    soccerCtx.fillStyle='red';
-    soccerCtx.beginPath();
-    soccerCtx.arc(ball.x,ball.y,ball.r,0,Math.PI*2);
-    soccerCtx.fill();
-}
+soccerCtx.fillStyle='green'; soccerCtx.fillRect(0,0,400,400);
+soccerCtx.fillStyle='yellow'; soccerCtx.fillRect(goal.x,goal.y,goal.w,goal.h);
+soccerCtx.fillStyle='blue'; soccerCtx.beginPath(); soccerCtx.arc(soccerPlayer.x,soccerPlayer.y,soccerPlayer.r,0,Math.PI*2); soccerCtx.fill();
+soccerCtx.fillStyle='white'; soccerCtx.beginPath(); soccerCtx.arc(ball.x,ball.y,ball.r,0,Math.PI*2); soccerCtx.fill();}
+resetSoccer();
 
 // ===== Puzzle Challenge =====
 const puzzleBoard=document.getElementById('puzzleBoard');
 let puzzleCards=[];
 function resetPuzzle(){
-    puzzleBoard.innerHTML='';
-    puzzleCards=[...Array(8).keys(),...Array(8).keys()].sort(()=>Math.random()-0.5);
-    puzzleCards.forEach((val,i)=>{
-        const btn=document.createElement('button');
-        btn.className='card';
-        btn.textContent='?';
-        btn.dataset.val=val;
-        btn.dataset.index=i;
-        btn.onclick=()=>flipCard(btn);
-        puzzleBoard.appendChild(btn);
-    });
+puzzleBoard.innerHTML='';
+puzzleCards=[...Array(8).keys(),...Array(8).keys()].sort(()=>Math.random()-0.5);
+puzzleCards.forEach((val,i)=>{
+const btn=document.createElement('button');
+btn.className='card';
+btn.textContent='?';
+btn.dataset.val=val;
+btn.dataset.index=i;
+btn.onclick=()=>flipCard(btn);
+puzzleBoard.appendChild(btn);
+});
 }
 let flipped=[];
 function flipCard(btn){
-    if(flipped.includes(btn)) return;
-    btn.textContent=btn.dataset.val;
-    flipped.push(btn);
-    if(flipped.length===2){
-        setTimeout(()=>{
-            if(flipped[0].dataset.val!==flipped[1].dataset.val){
-                flipped.forEach(b=>b.textContent='?');
-            }
-            flipped=[];
-        },500);
-    }
+if(flipped.includes(btn)) return;
+btn.textContent=btn.dataset.val;
+flipped.push(btn);
+if(flipped.length===2){setTimeout(()=>{if(flipped[0].dataset.val!==flipped[1].dataset.val){flipped.forEach(b=>b.textContent='?');} flipped=[];},500);}
 }
 resetPuzzle();
 </script>
