@@ -13,17 +13,17 @@ crossorigin="anonymous"></script>
 * { margin:0; padding:0; box-sizing:border-box; }
 body { font-family: Arial, sans-serif; background: linear-gradient(135deg,#667eea 0%,#764ba2 100%); min-height:100vh; padding:20px; color:white; }
 .container { max-width:1200px; margin:0 auto; }
-header { text-align:center; margin-bottom:30px; padding:20px; }
+header { text-align:center; margin-bottom:20px; padding:20px; }
 h1 { font-size:3em; text-shadow:2px 2px 4px rgba(0,0,0,0.3); }
-.subtitle { font-size:1.2em; opacity:0.9; }
-.games-nav { display:flex; justify-content:center; gap:15px; margin-bottom:20px; flex-wrap:wrap; }
+.subtitle { font-size:1.2em; opacity:0.9; margin-bottom:10px; }
+.games-nav { display:flex; justify-content:center; gap:15px; flex-wrap:wrap; margin-bottom:10px; }
 .nav-btn { background:white; color:#667eea; border:none; padding:12px 25px; border-radius:25px; cursor:pointer; font-size:1em; font-weight:bold; transition: all 0.3s; box-shadow:0 4px 15px rgba(0,0,0,0.2); }
 .nav-btn:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(0,0,0,0.3); }
 .nav-btn.active { background: linear-gradient(135deg,#f093fb 0%,#f5576c 100%); color:white; }
 .game-container { background:white; border-radius:15px; padding:20px; box-shadow:0 20px 60px rgba(0,0,0,0.3); display:none; color:black; position:relative; }
 .game-container.active { display:block; animation: slideIn 0.3s ease-in-out; }
 @keyframes slideIn { from { opacity:0; transform:translateY(10px);} to { opacity:1; transform:translateY(0); } }
-canvas { display:block; margin:20px auto; background:#222; image-rendering: pixelated; border-radius:10px; }
+canvas { display:block; margin:10px auto; background:#222; image-rendering: pixelated; border-radius:10px; }
 button { background: linear-gradient(135deg,#667eea 0%,#764ba2 100%); color:white; border:none; padding:10px 20px; border-radius:20px; cursor:pointer; margin:5px; transition:all 0.2s; }
 button:hover { transform:scale(1.05); box-shadow:0 4px 15px rgba(102,126,234,0.4); }
 button:active { transform:scale(0.95); }
@@ -39,7 +39,7 @@ button:active { transform:scale(0.95); }
 <div class="container">
 <header>
 <h1>🎮 Unblocked Games Hub</h1>
-<p class="subtitle">Enhanced Games with Fullscreen Support</p>
+<p class="subtitle">Enhanced Games with WASD & Fullscreen</p>
 </header>
 
 <div class="games-nav">
@@ -109,16 +109,17 @@ function spawnTreasures(){treasures=[];for(let i=0;i<10;i++){treasures.push({x:M
 function resetRPG(){player={x:5,y:5};generateMap();drawRPG();}
 document.addEventListener('keydown',(e)=>{
 if(!document.getElementById('rpg-game').classList.contains('active')) return;
-if(e.key==='ArrowUp'&&player.y>0) player.y--;
-if(e.key==='ArrowDown'&&player.y<24) player.y++;
-if(e.key==='ArrowLeft'&&player.x>0) player.x--;
-if(e.key==='ArrowRight'&&player.x<24) player.x++;
+const key=e.key.toLowerCase();
+if(key==='arrowup'||key==='w') player.y=Math.max(0,player.y-1);
+if(key==='arrowdown'||key==='s') player.y=Math.min(24,player.y+1);
+if(key==='arrowleft'||key==='a') player.x=Math.max(0,player.x-1);
+if(key==='arrowright'||key==='d') player.x=Math.min(24,player.x+1);
 collectTreasure();drawRPG();
 });
 function collectTreasure(){for(let i=0;i<treasures.length;i++){if(treasures[i].x===player.x&&treasures[i].y===player.y) treasures.splice(i,1);}}
 function drawRPG(){
 rpgCtx.fillStyle='#555'; rpgCtx.fillRect(0,0,rpgCanvas.width,rpgCanvas.height);
-for(let y=0;y<25;y++){for(let x=0;x<25;x++){rpgCtx.fillStyle=rpgMap[y][x]? '#444':'#888'; rpgCtx.fillRect(x*TILE_SIZE,y*TILE_SIZE,TILE_SIZE,TILE_SIZE);}}
+for(let y=0;y<25;y++){for(let x=0;x<25;x++){rpgCtx.fillStyle=rpgMap[y][x]? '#888':'#888'; rpgCtx.fillRect(x*TILE_SIZE,y*TILE_SIZE,TILE_SIZE,TILE_SIZE);}}
 treasures.forEach(t=>{rpgCtx.fillStyle='gold'; rpgCtx.fillRect(t.x*TILE_SIZE,t.y*TILE_SIZE,TILE_SIZE,TILE_SIZE);});
 rpgCtx.fillStyle='blue'; rpgCtx.fillRect(player.x*TILE_SIZE,player.y*TILE_SIZE,TILE_SIZE,TILE_SIZE);}
 resetRPG();
@@ -130,12 +131,12 @@ let soccerPlayer={x:200,y:350,r:15},ball={x:200,y:200,r:10},goal={x:150,y:0,w:10
 function resetSoccer(){soccerPlayer={x:200,y:350,r:15};ball={x:200,y:200,r:10};drawSoccer();}
 document.addEventListener('keydown',(e)=>{
 if(!document.getElementById('soccer-game').classList.contains('active')) return;
-const step=10;
-if(e.key==='ArrowUp') soccerPlayer.y=Math.max(0,soccerPlayer.y-step);
-if(e.key==='ArrowDown') soccerPlayer.y=Math.min(385,soccerPlayer.y+step);
-if(e.key==='ArrowLeft') soccerPlayer.x=Math.max(0,soccerPlayer.x-step);
-if(e.key==='ArrowRight') soccerPlayer.x=Math.min(385,soccerPlayer.x+step);
-if(Math.abs(soccerPlayer.x-ball.x)<20 && Math.abs(soccerPlayer.y-ball.y)<20) ball.y-=20;
+const key=e.key.toLowerCase(); const step=10;
+if(key==='arrowup'||key==='w') soccerPlayer.y=Math.max(0,soccerPlayer.y-step);
+if(key==='arrowdown'||key==='s') soccerPlayer.y=Math.min(385,soccerPlayer.y+step);
+if(key==='arrowleft'||key==='a') soccerPlayer.x=Math.max(0,soccerPlayer.x-step);
+if(key==='arrowright'||key==='d') soccerPlayer.x=Math.min(385,soccerPlayer.x+step);
+if(key===' ') {if(Math.abs(soccerPlayer.x-ball.x)<20 && Math.abs(soccerPlayer.y-ball.y)<20) ball.y-=20;}
 drawSoccer();
 });
 function drawSoccer(){
